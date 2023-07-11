@@ -1,0 +1,4 @@
+"E:\Program Files\JetBrains\CLion 2023.1.3\bin\cmake\win\x64\bin\cmake.exe" -DCMAKE_BUILD_TYPE=Debug "-DCMAKE_MAKE_PROGRAM=E:/Program Files/JetBrains/CLion 2023.1.3/bin/ninja/win/x64/ninja.exe" -G Ninja -S E:\c-workspace\currency-exchange-simulator -B E:\c-workspace\currency-exchange-simulator\cmake-build-debug-mingw
+-- Configuring done
+-- Generating done
+-- Build files have been written to: E:/c-workspace/currency-exchange-simulator/cmake-build-debug-mingw

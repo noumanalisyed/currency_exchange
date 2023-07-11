@@ -1,0 +1,3 @@
+E:/c-workspace/currency-exchange-simulator/cmake-build-debug-mingw/CMakeFiles/currency_exchange_simulator.dir
+E:/c-workspace/currency-exchange-simulator/cmake-build-debug-mingw/CMakeFiles/edit_cache.dir
+E:/c-workspace/currency-exchange-simulator/cmake-build-debug-mingw/CMakeFiles/rebuild_cache.dir

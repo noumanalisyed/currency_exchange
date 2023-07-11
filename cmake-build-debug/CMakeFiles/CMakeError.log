@@ -1,0 +1,15 @@
+Detecting C compiler ABI info failed to compile with the following output:
+Change Dir: E:/c-workspace/currency-exchange-simulator/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-4kytde
+
+Run Build Command(s):E:/msys64/mingw64 -f Makefile cmTC_e869e/fast && Access is denied
+Generator: execution of make failed. Make command was: E:/msys64/mingw64 -f Makefile cmTC_e869e/fast && 
+
+
+
+Determining if the C compiler works failed with the following output:
+Change Dir: E:/c-workspace/currency-exchange-simulator/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-6lg3de
+
+Run Build Command(s):E:/msys64/mingw64 -f Makefile cmTC_4f8fc/fast && Access is denied
+Generator: execution of make failed. Make command was: E:/msys64/mingw64 -f Makefile cmTC_4f8fc/fast && 
+
+
