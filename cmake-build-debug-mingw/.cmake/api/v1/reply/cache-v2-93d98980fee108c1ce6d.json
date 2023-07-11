@@ -55,7 +55,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "e:/c-workspace/currency-exchange-simulator/cmake-build-debug-mingw"
+			"value" : "e:/c-workspace/currency_exchange/cmake-build-debug-mingw"
 		},
 		{
 			"name" : "CMAKE_CACHE_MAJOR_VERSION",
@@ -575,7 +575,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "E:/c-workspace/currency-exchange-simulator/cmake-build-debug-mingw/CMakeFiles/pkgRedirects"
+			"value" : "E:/c-workspace/currency_exchange/cmake-build-debug-mingw/CMakeFiles/pkgRedirects"
 		},
 		{
 			"name" : "CMAKE_GENERATOR",
@@ -647,7 +647,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "E:/c-workspace/currency-exchange-simulator"
+			"value" : "E:/c-workspace/currency_exchange"
 		},
 		{
 			"name" : "CMAKE_INSTALL_PREFIX",
@@ -659,7 +659,7 @@
 				}
 			],
 			"type" : "PATH",
-			"value" : "C:/Program Files (x86)/currency_exchange_simulator"
+			"value" : "C:/Program Files (x86)/currency_exchange"
 		},
 		{
 			"name" : "CMAKE_LINKER",
@@ -875,7 +875,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "currency_exchange_simulator"
+			"value" : "currency_exchange"
 		},
 		{
 			"name" : "CMAKE_RANLIB",
@@ -1266,7 +1266,7 @@
 			"value" : "TRUE"
 		},
 		{
-			"name" : "currency_exchange_simulator_BINARY_DIR",
+			"name" : "currency_exchange_BINARY_DIR",
 			"properties" : 
 			[
 				{
@@ -1275,10 +1275,10 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "E:/c-workspace/currency-exchange-simulator/cmake-build-debug-mingw"
+			"value" : "E:/c-workspace/currency_exchange/cmake-build-debug-mingw"
 		},
 		{
-			"name" : "currency_exchange_simulator_IS_TOP_LEVEL",
+			"name" : "currency_exchange_IS_TOP_LEVEL",
 			"properties" : 
 			[
 				{
@@ -1290,7 +1290,7 @@
 			"value" : "ON"
 		},
 		{
-			"name" : "currency_exchange_simulator_SOURCE_DIR",
+			"name" : "currency_exchange_SOURCE_DIR",
 			"properties" : 
 			[
 				{
@@ -1299,7 +1299,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "E:/c-workspace/currency-exchange-simulator"
+			"value" : "E:/c-workspace/currency_exchange"
 		}
 	],
 	"kind" : "cache",

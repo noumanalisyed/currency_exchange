@@ -29,5 +29,13 @@ private:
 
     void getProductFilter(const std::string& product_name, const std::string& time_stamp, const std::string& order_type);
 
-    void printAllProducts(std::vector<OrderBookEntry> entries);
+    void printFilterProducts(std::vector<OrderBookEntry> entries);
+
+    double getOpenFromFilterProducts(std::vector<OrderBookEntry> entries);
+
+    double getCloseFromFilterProducts(std::vector<OrderBookEntry> entries);
+
+    double getHighFromFilterProducts(std::vector<OrderBookEntry> entries);
+
+    double getLowFromFilterProducts(std::vector<OrderBookEntry> entries);
 };

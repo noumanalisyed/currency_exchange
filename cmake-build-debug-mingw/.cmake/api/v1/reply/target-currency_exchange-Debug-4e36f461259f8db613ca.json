@@ -2,10 +2,10 @@
 	"artifacts" : 
 	[
 		{
-			"path" : "currency_exchange_simulator.exe"
+			"path" : "currency_exchange.exe"
 		},
 		{
-			"path" : "currency_exchange_simulator.pdb"
+			"path" : "currency_exchange.pdb"
 		}
 	],
 	"backtrace" : 1,
@@ -55,7 +55,7 @@
 			[
 				{
 					"backtrace" : 2,
-					"path" : "E:/c-workspace/currency-exchange-simulator/."
+					"path" : "E:/c-workspace/currency_exchange/."
 				}
 			],
 			"language" : "CXX",
@@ -75,11 +75,11 @@
 				5,
 				7,
 				9,
-				12
+				11
 			]
 		}
 	],
-	"id" : "currency_exchange_simulator::@6890427a1f51a3e7e1df",
+	"id" : "currency_exchange::@6890427a1f51a3e7e1df",
 	"link" : 
 	{
 		"commandFragments" : 
@@ -99,8 +99,8 @@
 		],
 		"language" : "CXX"
 	},
-	"name" : "currency_exchange_simulator",
-	"nameOnDisk" : "currency_exchange_simulator.exe",
+	"name" : "currency_exchange",
+	"nameOnDisk" : "currency_exchange.exe",
 	"paths" : 
 	{
 		"build" : ".",
@@ -118,7 +118,7 @@
 				5,
 				7,
 				9,
-				12
+				11
 			]
 		},
 		{
@@ -129,8 +129,7 @@
 				4,
 				6,
 				8,
-				10,
-				11
+				10
 			]
 		}
 	],
@@ -195,11 +194,6 @@
 		{
 			"backtrace" : 1,
 			"path" : "Wallet.h",
-			"sourceGroupIndex" : 1
-		},
-		{
-			"backtrace" : 1,
-			"path" : "candelstick.h",
 			"sourceGroupIndex" : 1
 		},
 		{

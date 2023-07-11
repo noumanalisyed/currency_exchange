@@ -8,7 +8,7 @@
 MerkelMain::MerkelMain()
 {
     std::cout<<"MerkelMain -- Default Constructor "<<std::endl;
-    orderBook = new OrderBook("E:\\c-workspace\\currency-exchange-simulator\\20200601.csv");
+    orderBook = new OrderBook("E:\\c-workspace\\currency_exchange\\20200601.csv");
 }
 
 void MerkelMain::init()
@@ -74,13 +74,59 @@ void MerkelMain::printHelp()
   std::cout << "Help - your aim is to make money. Analyse the market and make bids and offers" << std::endl;
 }
 
-void MerkelMain :: printAllProducts(std::vector<OrderBookEntry> entries){
+double MerkelMain :: getOpenFromFilterProducts(std::vector<OrderBookEntry> entries){
+    std::cout<<"Earliest Time :"<<orderBook->getEarliestTime();
+   double total_price = 0;
+   double total_amount = 0;
+   double open_current_instance = 0;
+    for (OrderBookEntry &p : entries)
+    {
+        total_price += p.price;
+        total_amount += p.amount;
+    }
+    open_current_instance = total_amount /total_price;
+    return open_current_instance;
+
+}
+double MerkelMain :: getCloseFromFilterProducts(std::vector<OrderBookEntry> entries){
+
+    double total_price = 0;
+    double total_amount = 0;
+    double close_current_instance = 0;
+    for (OrderBookEntry &p : entries)
+    {
+        total_price += p.price;
+        total_amount += p.amount;
+    }
+    close_current_instance = total_amount /total_price;
+    return close_current_instance;
+
+}
+double MerkelMain :: getLowFromFilterProducts(std::vector<OrderBookEntry> entries){
+
+    double total_price = 0;
+    double total_amount = 0;
+    double low_current_instance = orderBook->getHighPrice(entries);
+    return low_current_instance;
+}
+double MerkelMain :: getHighFromFilterProducts(std::vector<OrderBookEntry> entries){
+
+    double total_price = 0;
+    double total_amount = 0;
+    double high_current_instance = orderBook->getHighPrice(entries);
+    return high_current_instance;
+}
+void MerkelMain :: printFilterProducts(std::vector<OrderBookEntry> entries){
 
     std::cout << "Time Stamp\t\t\t Product\t Type\t Price\t\t Amount" << std::endl;
     for (OrderBookEntry &p : entries)
     {
         std::cout <<p.timestamp<<"\t"<<p.product<<"\t\t"<<"ASK"<<"\t"<<p.price<<"\t"<<p.amount << std::endl;
     }
+    std::cout<<"Open : "<<getOpenFromFilterProducts(entries)<<std::endl;
+    std::cout<<"Close : "<<getCloseFromFilterProducts(entries)<<std::endl;
+    std::cout<<"High : "<<getHighFromFilterProducts(entries)<<std::endl;
+    std::cout<<"Low : "<<getLowFromFilterProducts(entries)<<std::endl;
 }
 void MerkelMain::printMarketStats()
 {
@@ -117,7 +163,7 @@ void MerkelMain::getProductFilter(const std::string& product_name, const std::st
         entries =  orderBook->getOrders(OrderBookType::bid,
                                                                    product_name,time_stamp);
     }
-    printAllProducts(entries);
+    printFilterProducts(entries);
 
 }
 void MerkelMain::enterAsk()

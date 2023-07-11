@@ -1,11 +1,11 @@
 cmake_minimum_required(VERSION 3.25)
-project(currency_exchange_simulator)
+project(currency_exchange)
 
 set(CMAKE_CXX_STANDARD 14)
 
 include_directories(.)
 
-add_executable(currency_exchange_simulator
+add_executable(currency_exchange
         CSVReader.cpp
         CSVReader.h
         main.cpp
@@ -16,4 +16,5 @@ add_executable(currency_exchange_simulator
         OrderBookEntry.cpp
         OrderBookEntry.h
         Wallet.cpp
-        Wallet.h candelstick.h candlestick.cpp)
+        Wallet.h
+        candlestick.cpp)

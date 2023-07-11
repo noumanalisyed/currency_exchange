@@ -1,8 +1,8 @@
-# Install script for directory: E:/c-workspace/currency-exchange-simulator
+# Install script for directory: E:/c-workspace/currency_exchange
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "C:/Program Files (x86)/currency_exchange_simulator")
+  set(CMAKE_INSTALL_PREFIX "C:/Program Files (x86)/currency_exchange")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 
@@ -45,5 +45,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "E:/c-workspace/currency-exchange-simulator/cmake-build-debug-mingw/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "E:/c-workspace/currency_exchange/cmake-build-debug-mingw/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")
