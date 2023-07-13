@@ -1,8 +1,13 @@
 #pragma once
 #include <vector>
+#include <unordered_set>
+#include <set>
+#include <unordered_map>
 #include "OrderBookEntry.h"
 #include "OrderBook.h"
 #include "Wallet.h"
+#include "SearchObject.h"
+#include "candelstick.h"
 
 class MerkelMain
 {
@@ -22,12 +27,24 @@ private:
   void goToNextTimeFrame();
   void processUserOption(int userOption);
 
+  void createCandelStick();
+
   std::string currentTime;
   OrderBook * orderBook;
-
+  std::vector<OrderBookEntry> entries;
+  std::unordered_map<std::string , int> uniqueTimeStampValues;
+  std::unordered_map<std::string, int> uniqueProductValues;
+  std::vector<OrderBookEntry> vectorAsk[10];
+  std::vector<OrderBookEntry> vectorBid[10];
+  std::vector<std::pair<std::string , int>> *sortedData;
   Wallet wallet;
+  SearchObject **searchObject;
+  Candlestick **candlestick;
 
-    void getProductFilter(const std::string& product_name, const std::string& time_stamp, const std::string& order_type);
+
+    std::vector<OrderBookEntry> getProductFilter(const std::string& product_name,
+                                                 const std::string& time_stamp,
+                                                 const std::string& order_type);
 
     void printFilterProducts(std::vector<OrderBookEntry> entries);
 
@@ -35,7 +52,37 @@ private:
 
     double getCloseFromFilterProducts(std::vector<OrderBookEntry> entries);
 
-    double getHighFromFilterProducts(std::vector<OrderBookEntry> entries);
+    double getHighFromFilterProductsBid(std::vector<OrderBookEntry> entries, std::string product,
+                                                      std::string timestamp,OrderBookType type);
 
-    double getLowFromFilterProducts(std::vector<OrderBookEntry> entries);
+    double getHighFromFilterProductsAsk(std::vector<OrderBookEntry> entries, std::string product,
+                                        std::string timestamp,OrderBookType type);
+
+    double getLowFromFilterProductsBid(std::vector<OrderBookEntry> entries, std::string product,
+                                        std::string timestamp,OrderBookType type);
+
+    double getLowFromFilterProductsAsk(std::vector<OrderBookEntry> entries, std::string product,
+                                        std::string timestamp,OrderBookType type);
+
+
+    void splitTimeStampByUniqueValues(std::vector<OrderBookEntry> entries );
+
+    void splitProductsByUniqueValues(std::vector<OrderBookEntry> entries );
+
+    int getPreviousTimeStampIndex(std::string timeStamp);
+
+    void sort_map(std::unordered_map<std::string, int> unorderedMap);
+
+    bool static comp(const std::pair<std::string ,int>& a, const std::pair<std::string,int>& b);
+
+    int getCurrentTimeStampIndex(std::string timeStamp);
+
+    std::string getCurrentTimeStamp(std::string timeStamp);
+    std::string getPreviousTimeStamp(std::string timeStamp);
+
+    double getAverageFromFilterProductAsk(std::vector<OrderBookEntry> entries, std::string timestamp,
+                                                   std::string product,enum OrderBookType type);
+    double getAverageFromFilterProductBid(std::vector<OrderBookEntry> entries, std::string timestamp,
+                                          std::string product,enum OrderBookType type);
+
 };

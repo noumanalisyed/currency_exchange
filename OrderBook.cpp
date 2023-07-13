@@ -46,6 +46,10 @@ std::vector<OrderBookEntry> OrderBook::getOrders(OrderBookType type,
   }
   return orders_sub;
 };
+std::vector<OrderBookEntry> OrderBook::getAllOrders()
+{
+  return orders;
+};
 
 double OrderBook::getHighPrice(std::vector<OrderBookEntry> &orders)
 {
