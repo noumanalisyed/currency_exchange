@@ -5,6 +5,13 @@
 #include <vector>
 #include "candelstick.h"
 
+Candlestick::Candlestick(){
+    _open = 0.0;
+    _high = 0.0;
+    _low  = 0.0;
+    _close =0.0;
+    _type = OrderBookType::ask;
+}
 Candlestick::~Candlestick() {}
 
 

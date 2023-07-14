@@ -40,7 +40,9 @@ private:
   Wallet wallet;
   SearchObject **searchObject;
   Candlestick **candlestick;
-
+    int sizeTimeStamps = 0;
+    int sizeProducts = 0;
+    std::vector<std::string> vectorProducts;
 
     std::vector<OrderBookEntry> getProductFilter(const std::string& product_name,
                                                  const std::string& time_stamp,
@@ -65,9 +67,9 @@ private:
                                         std::string timestamp,OrderBookType type);
 
 
-    void splitTimeStampByUniqueValues(std::vector<OrderBookEntry> entries );
+    void splitTimeStampByUniqueValues();
 
-    void splitProductsByUniqueValues(std::vector<OrderBookEntry> entries );
+    void splitProductsByUniqueValues();
 
     int getPreviousTimeStampIndex(std::string timeStamp);
 
@@ -80,9 +82,10 @@ private:
     std::string getCurrentTimeStamp(std::string timeStamp);
     std::string getPreviousTimeStamp(std::string timeStamp);
 
-    double getAverageFromFilterProductAsk(std::vector<OrderBookEntry> entries, std::string timestamp,
-                                                   std::string product,enum OrderBookType type);
-    double getAverageFromFilterProductBid(std::vector<OrderBookEntry> entries, std::string timestamp,
+    double getAverageFromFilterProductBid(std::string timestamp,
                                           std::string product,enum OrderBookType type);
 
+    void initCandleStick();
+
+    double getAverageFromFilterProductAsk(std::string timestamp, std::string product, OrderBookType type);
 };

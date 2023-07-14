@@ -43,6 +43,11 @@ public:
 
     friend std::ostream &operator<<(std::ostream &os, const Candlestick &candlestick);
 
+    void setType(OrderBookType type);
+
+    const std::string &getProduct() const;
+
+    void setProduct(const std::string &product);
 
 private:
     double _open;
@@ -50,25 +55,8 @@ private:
     double _low;
     double _close;
     OrderBookType _type;
-public:
-    void setType(OrderBookType type);
-
-private:
     std::string product;
-public:
-    public:
-
-
-    const std::string &getProduct() const;
-
-    void setProduct(const std::string &product);
-
-private:
     std::string _x;
+
 };
-
-
-
-
-
 #endif //CURRENCY_EXCHANGE_CANDELSTICK_H

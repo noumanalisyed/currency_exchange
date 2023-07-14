@@ -7,6 +7,7 @@
 #include <unordered_map>
 #include <algorithm>
 
+
 bool MerkelMain::comp(const std::pair<std::string, int> &a,
                const std::pair<std::string, int> &b)
 {
@@ -18,20 +19,28 @@ void MerkelMain::sort_map(std::unordered_map<std::string, int> unorderedMap) {
     std::sort(sortedData->begin(), sortedData->end(), comp);
 }
 
-
+void MerkelMain::initCandleStick(){
+    for (int i = 0; i < sizeTimeStamps; i++){
+        candlestick[i] = new Candlestick();
+        std::cout<<*candlestick[i]<<std::endl;
+    }
+}
 MerkelMain::MerkelMain()
 {
     std::cout<<"MerkelMain -- Default Constructor "<<std::endl;
 
     orderBook = new OrderBook("E:\\c-workspace\\currency_exchange\\20200601.csv");
     entries = orderBook->getAllOrders();
-    splitTimeStampByUniqueValues(entries);
-    splitProductsByUniqueValues(entries);
-    std::cout<<"Unique Time Stamps : "<<uniqueTimeStampValues.size()<<std::endl;
-    searchObject = new SearchObject* [uniqueTimeStampValues.size()];
-    candlestick = new Candlestick * [uniqueTimeStampValues.size()];
+    splitTimeStampByUniqueValues();
+    splitProductsByUniqueValues();
+    sizeProducts = uniqueProductValues.size();
+    sizeTimeStamps = uniqueTimeStampValues.size();
 
-    std::cout<<"Unique Products  : "<<uniqueProductValues.size()<<std::endl;
+    std::cout<<"Unique Time Stamps : "<<sizeTimeStamps<<std::endl;
+    searchObject = new SearchObject* [sizeTimeStamps];
+    candlestick = new Candlestick * [sizeTimeStamps];
+    initCandleStick();
+    std::cout<<"Unique Products  : "<<sizeProducts<<std::endl;
     std::string sample;
     sort_map(uniqueTimeStampValues);
     int objectIndex =0;
@@ -42,7 +51,7 @@ MerkelMain::MerkelMain()
         int indexPrevious = getPreviousTimeStampIndex(i.first);
         std::string strCurrentTimeStamp = getCurrentTimeStamp(i.first);
         std::string strPreviousTimeStamp = getPreviousTimeStamp(i.first);
-        searchObject[objectIndex] = new SearchObject(strCurrentTimeStamp,strPreviousTimeStamp,index,indexPrevious);
+        searchObject[objectIndex++] = new SearchObject(strCurrentTimeStamp,strPreviousTimeStamp,index,indexPrevious);
         std::cout<<"Time Stamp  "<< i.first<<", index : "<<index<<", Previous Index : "<<indexPrevious
         <<", Current Time Stamp : "<<strCurrentTimeStamp<<",  Previous Time Stamp : "<<strPreviousTimeStamp<<std::endl;
     }
@@ -113,30 +122,28 @@ std::string MerkelMain::getPreviousTimeStamp(std::string timeStamp){
 
 void MerkelMain::createCandelStick(){
 
-    int size = uniqueProductValues.size();
-    std::string strProducts[size];
     int z = 0;
     for (auto const& element : uniqueProductValues)
     {
-        strProducts[z++] = element.first;  // Write to file or whatever you want to do
+        vectorProducts.push_back(element.first);  // Write to file or whatever you want to do
     }
     int i = 0;
-    while (i < size) {
+    while (i < sizeProducts) {
         int j = 0;
         while (j < sortedData->size()) {
-            double open = getAverageFromFilterProductAsk(entries, searchObject[i]->getStrPreviousTimeStamp(),
-                                                      strProducts[i], OrderBookType::ask);
-            double close = getAverageFromFilterProductAsk(entries, searchObject[i]->getStrCurrentTimeStamp(),
-                                                       strProducts[i], OrderBookType::ask);
-            double low = getLowFromFilterProductsAsk(entries,strProducts[i],
-                                                     searchObject[i]->getStrCurrentTimeStamp(),OrderBookType::ask);
-            double high = getHighFromFilterProductsAsk(entries,strProducts[i],
-                                                      searchObject[i]->getStrCurrentTimeStamp(),OrderBookType::ask);
+            double open = getAverageFromFilterProductAsk(searchObject[i+1]->getStrPreviousTimeStamp(),
+                                                         vectorProducts[i], OrderBookType::ask);
+            double close = getAverageFromFilterProductAsk(searchObject[i+1]->getStrCurrentTimeStamp(),
+                                                          vectorProducts[i], OrderBookType::ask);
+            double low = getLowFromFilterProductsAsk(entries,vectorProducts[i],
+                                                     searchObject[i+1]->getStrCurrentTimeStamp(),OrderBookType::ask);
+            double high = getHighFromFilterProductsAsk(entries,vectorProducts[i],
+                                                      searchObject[i+1]->getStrCurrentTimeStamp(),OrderBookType::ask);
             candlestick[i][j].setClose(close);
             candlestick[i][j].setHigh(high);
             candlestick[i][j].setLow(low);
             candlestick[i][j].setOpen(open);
-            candlestick[i][j].setProduct(strProducts[i]);
+            candlestick[i][j].setProduct(vectorProducts[i]);
             candlestick[i][j].setType(OrderBookType::ask);
 
             j++;
@@ -207,7 +214,7 @@ void MerkelMain::printHelp()
   std::cout << "Help - your aim is to make money. Analyse the market and make bids and offers" << std::endl;
 }
 
-double MerkelMain::getAverageFromFilterProductAsk(std::vector<OrderBookEntry> entries, std::string timestamp,
+double MerkelMain::getAverageFromFilterProductAsk(std::string timestamp,
                                                std::string product,enum OrderBookType type){
     double total_price = 0;
     double total_amount = 0;
@@ -223,8 +230,8 @@ double MerkelMain::getAverageFromFilterProductAsk(std::vector<OrderBookEntry> en
     return open_current_instance;
 }
 
-double getAverageFromFilterProductBid(std::vector<OrderBookEntry> entries, std::string timestamp,
-                                      std::string product,enum OrderBookType type)
+double MerkelMain::getAverageFromFilterProductBid(std::string timestamp, std::string product,
+                                      enum OrderBookType type)
 {
     double total_price = 0;
     double total_amount = 0;
@@ -291,7 +298,7 @@ double MerkelMain :: getLowFromFilterProductsAsk(std::vector<OrderBookEntry> ent
 
 double MerkelMain :: getLowFromFilterProductsBid(std::vector<OrderBookEntry> entries, std::string product,
                                               std::string timestamp,OrderBookType type){
-    double low_current_instance = orderBook->getHighPrice(entries);
+    double low_current_instance = orderBook->getLowPrice(entries);
     for (OrderBookEntry &p : entries)
     {
         if ((p.product == product) && (p.timestamp == timestamp) && (type == OrderBookType::bid)) {
@@ -516,7 +523,7 @@ void MerkelMain::processUserOption(int userOption)
 
 
 // Function to split the CSV file based on unique values
-void MerkelMain::splitTimeStampByUniqueValues(std::vector<OrderBookEntry> entries ) {
+void MerkelMain::splitTimeStampByUniqueValues() {
 
     int i = 1;
     //std::unordered_set<std::string> uniqueValues;
@@ -524,8 +531,9 @@ void MerkelMain::splitTimeStampByUniqueValues(std::vector<OrderBookEntry> entrie
         std::string tokens = p.timestamp;
         uniqueTimeStampValues.insert(std::pair<std::string,int>(tokens,i++));
     }
+    std::cout<<"Exiting Time Stamp Unique Values "<<std::endl;
 }
-void MerkelMain::splitProductsByUniqueValues(std::vector<OrderBookEntry> entries ) {
+void MerkelMain::splitProductsByUniqueValues() {
 
     //std::unordered_set<std::string> uniqueValues;
     int i = 1;
@@ -535,4 +543,5 @@ void MerkelMain::splitProductsByUniqueValues(std::vector<OrderBookEntry> entries
         std::string tokens = p.product;
         uniqueProductValues.insert(std::pair<std::string,int>(tokens,i++));
     }
+    std::cout<<"Exiting Products Unique Values "<<std::endl;
 }
