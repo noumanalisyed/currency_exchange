@@ -7,6 +7,7 @@
 #include <unordered_map>
 #include <algorithm>
 
+std::vector<std::pair<OrderBookEntry,std::string>> vectorUniqueProduct[5];
 
 bool MerkelMain::comp(const std::pair<std::string, int> &a,
                const std::pair<std::string, int> &b)
@@ -36,6 +37,11 @@ MerkelMain::MerkelMain()
     sizeProducts = uniqueProductValues.size();
     sizeTimeStamps = uniqueTimeStampValues.size();
 
+    /*for (int j = 0; j < uniqueProductValues.size() ; ++j) {
+        for (auto const &element: entries) {
+            vectorUniqueProduct[j].push_back (std::make_pair(getProductWiseFilter(element.product), vectorProducts[j]));
+        }
+    }*/
     std::cout<<"Unique Time Stamps : "<<sizeTimeStamps<<std::endl;
     searchObject = new SearchObject* [sizeTimeStamps];
     candlestick = new Candlestick * [sizeTimeStamps];
@@ -58,8 +64,8 @@ MerkelMain::MerkelMain()
 
     createCandelStick();
 
-    for (int i = 0, j = 0; i < 5; j++, i++) {
-        std::cout<<candlestick[i][j];
+    for (int j = 0; j < sizeTimeStamps; j++) {
+        std::cout<<*(candlestick[j]);
     }
 
 }
@@ -122,6 +128,7 @@ std::string MerkelMain::getPreviousTimeStamp(std::string timeStamp){
 
 void MerkelMain::createCandelStick(){
 
+    std::string product;
     int z = 0;
     for (auto const& element : uniqueProductValues)
     {
@@ -129,23 +136,23 @@ void MerkelMain::createCandelStick(){
     }
     int i = 0;
     while (i < sizeProducts) {
+        product = vectorProducts[i];
         int j = 0;
         while (j < sortedData->size()) {
-            double open = getAverageFromFilterProductAsk(searchObject[i+1]->getStrPreviousTimeStamp(),
-                                                         vectorProducts[i], OrderBookType::ask);
-            double close = getAverageFromFilterProductAsk(searchObject[i+1]->getStrCurrentTimeStamp(),
-                                                          vectorProducts[i], OrderBookType::ask);
-            double low = getLowFromFilterProductsAsk(entries,vectorProducts[i],
-                                                     searchObject[i+1]->getStrCurrentTimeStamp(),OrderBookType::ask);
-            double high = getHighFromFilterProductsAsk(entries,vectorProducts[i],
-                                                      searchObject[i+1]->getStrCurrentTimeStamp(),OrderBookType::ask);
-            candlestick[i][j].setClose(close);
-            candlestick[i][j].setHigh(high);
-            candlestick[i][j].setLow(low);
-            candlestick[i][j].setOpen(open);
-            candlestick[i][j].setProduct(vectorProducts[i]);
-            candlestick[i][j].setType(OrderBookType::ask);
-
+            double open = getAverageFromFilterProductAsk(searchObject[j]->getStrPreviousTimeStamp(),
+                                                         product, OrderBookType::ask);
+            double close = getAverageFromFilterProductAsk(searchObject[j]->getStrCurrentTimeStamp(),
+                                                          product, OrderBookType::ask);
+            double low = getLowFromFilterProductsAsk(entries,product,
+                                                     searchObject[j]->getStrCurrentTimeStamp(),OrderBookType::ask);
+            double high = getHighFromFilterProductsAsk(entries,product,
+                                                      searchObject[j]->getStrCurrentTimeStamp(),OrderBookType::ask);
+            candlestick[j]->setClose(close);
+            candlestick[j]->setHigh(high);
+            candlestick[j]->setLow(low);
+            candlestick[j]->setOpen(open);
+            candlestick[j]->setProduct(product);
+            candlestick[j]->setType(OrderBookType::ask);
             j++;
         }
         i++;
@@ -219,14 +226,17 @@ double MerkelMain::getAverageFromFilterProductAsk(std::string timestamp,
     double total_price = 0;
     double total_amount = 0;
     double open_current_instance = 0;
+    int i=0;
+
+     //std::vector<OrderBookEntry> test = vectorUniqueProduct.first[i];
     for (OrderBookEntry &p : entries)
     {
         if ((p.product == product) && (p.timestamp == timestamp) && (type == OrderBookType::ask)) {
-                total_price += p.price;
+                total_price += p.price * p.amount;
                 total_amount += p.amount;
         }
     }
-    open_current_instance = total_amount /total_price;
+    open_current_instance = total_price /total_amount;
     return open_current_instance;
 }
 
@@ -289,9 +299,6 @@ double MerkelMain :: getLowFromFilterProductsAsk(std::vector<OrderBookEntry> ent
             if( low_current_instance > p.price)
                 low_current_instance = p.price;
         }
-        else{
-            break;
-        }
     }
     return low_current_instance;
 }
@@ -302,11 +309,8 @@ double MerkelMain :: getLowFromFilterProductsBid(std::vector<OrderBookEntry> ent
     for (OrderBookEntry &p : entries)
     {
         if ((p.product == product) && (p.timestamp == timestamp) && (type == OrderBookType::bid)) {
-            if( low_current_instance > p.price)
+            if( low_current_instance < p.price)
                 low_current_instance = p.price;
-        }
-        else{
-            break;
         }
     }
     return low_current_instance;
@@ -321,9 +325,6 @@ double MerkelMain :: getHighFromFilterProductsAsk(std::vector<OrderBookEntry> en
             if( high_current_instance < p.price)
                 high_current_instance = p.price;
         }
-        else{
-            break;
-        }
     }
     return high_current_instance;
 }
@@ -335,9 +336,6 @@ double MerkelMain :: getHighFromFilterProductsBid(std::vector<OrderBookEntry> en
         if ((p.product == product) && (p.timestamp == timestamp) && (type == OrderBookType::bid)) {
             if( high_current_instance < p.price)
                 high_current_instance = p.price;
-        }
-        else{
-            break;
         }
     }
     return high_current_instance;
@@ -379,6 +377,12 @@ std::vector<OrderBookEntry>  MerkelMain::getProductFilter(const std::string& pro
         entries =  orderBook->getOrders(OrderBookType::bid,product_name,time_stamp);
     }
     printFilterProducts(entries);
+    return entries;
+}
+std::vector<OrderBookEntry>  MerkelMain::getProductWiseFilter(const std::string& product_name)
+{
+    std::vector<OrderBookEntry> entries;
+    entries =  orderBook->getOrders(product_name);
     return entries;
 }
 void MerkelMain::enterAsk()

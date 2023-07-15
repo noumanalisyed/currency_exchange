@@ -46,6 +46,18 @@ std::vector<OrderBookEntry> OrderBook::getOrders(OrderBookType type,
   }
   return orders_sub;
 };
+std::vector<OrderBookEntry> OrderBook::getOrders(std::string product)
+{
+  std::vector<OrderBookEntry> orders_sub;
+  for (OrderBookEntry &e : orders)
+  {
+    if (e.product == product)
+    {
+      orders_sub.push_back(e);
+    }
+  }
+  return orders_sub;
+};
 std::vector<OrderBookEntry> OrderBook::getAllOrders()
 {
   return orders;

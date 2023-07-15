@@ -15,17 +15,19 @@ public:
   MerkelMain();
   /** call this to start the sim*/
   void init();
+    std::vector<OrderBookEntry>  getProductWiseFilter(const std::string& product_name);
+    void printMenu();
+    int getUserOption();
+    void printHelp();
+    void printMarketStats();
+    void enterAsk();
+    void enterBid();
+    void printWallet();
+    void goToNextTimeFrame();
+    void processUserOption(int userOption);
+
 
 private:
-  void printMenu();
-  int getUserOption();
-  void printHelp();
-  void printMarketStats();
-  void enterAsk();
-  void enterBid();
-  void printWallet();
-  void goToNextTimeFrame();
-  void processUserOption(int userOption);
 
   void createCandelStick();
 
@@ -37,6 +39,8 @@ private:
   std::vector<OrderBookEntry> vectorAsk[10];
   std::vector<OrderBookEntry> vectorBid[10];
   std::vector<std::pair<std::string , int>> *sortedData;
+  std::vector<std::pair<std::vector<OrderBookEntry>,std::string>> vectorUniqueProduct[5];
+
   Wallet wallet;
   SearchObject **searchObject;
   Candlestick **candlestick;
@@ -88,4 +92,6 @@ private:
     void initCandleStick();
 
     double getAverageFromFilterProductAsk(std::string timestamp, std::string product, OrderBookType type);
+
+
 };

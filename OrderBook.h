@@ -30,7 +30,10 @@ public:
   double getHighPrice(std::vector<OrderBookEntry> &orders);
   double getLowPrice(std::vector<OrderBookEntry> &orders);
   std::vector<OrderBookEntry> getAllOrders();
+  std::vector<OrderBookEntry> getOrders(std::string product);
 
 private:
   std::vector<OrderBookEntry> orders;
+
+
 };

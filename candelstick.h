@@ -19,9 +19,8 @@
 
 class Candlestick {
 public:
-    Candlestick();
 
-    ~Candlestick();
+    Candlestick();
 
     Candlestick(double open, double high, double low, double close, OrderBookType type, const std::string &product);
 
@@ -41,7 +40,7 @@ public:
 
     void setClose(double close);
 
-    friend std::ostream &operator<<(std::ostream &os, const Candlestick &candlestick);
+    OrderBookType getType() const;
 
     void setType(OrderBookType type);
 
@@ -49,14 +48,20 @@ public:
 
     void setProduct(const std::string &product);
 
+    friend std::ostream &operator<<(std::ostream &os, const Candlestick &candlestick);
+
 private:
     double _open;
     double _high;
     double _low;
     double _close;
     OrderBookType _type;
-    std::string product;
-    std::string _x;
-
+    std::string _product;
 };
+
+
+
+
+
+
 #endif //CURRENCY_EXCHANGE_CANDELSTICK_H
