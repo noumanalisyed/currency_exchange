@@ -105,6 +105,13 @@ build CMakeFiles/currency_exchange.dir/SearchObject.cpp.obj: CXX_COMPILER__curre
   OBJECT_DIR = CMakeFiles\currency_exchange.dir
   OBJECT_FILE_DIR = CMakeFiles\currency_exchange.dir
 
+build CMakeFiles/currency_exchange.dir/SearchObjectTimeStamp.cpp.obj: CXX_COMPILER__currency_exchange_Debug E$:/c-workspace/currency_exchange/SearchObjectTimeStamp.cpp || cmake_object_order_depends_target_currency_exchange
+  DEP_FILE = CMakeFiles\currency_exchange.dir\SearchObjectTimeStamp.cpp.obj.d
+  FLAGS = -g -fdiagnostics-color=always -std=gnu++14
+  INCLUDES = -IE:/c-workspace/currency_exchange/.
+  OBJECT_DIR = CMakeFiles\currency_exchange.dir
+  OBJECT_FILE_DIR = CMakeFiles\currency_exchange.dir
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target currency_exchange
@@ -113,7 +120,7 @@ build CMakeFiles/currency_exchange.dir/SearchObject.cpp.obj: CXX_COMPILER__curre
 #############################################
 # Link the executable currency_exchange.exe
 
-build currency_exchange.exe: CXX_EXECUTABLE_LINKER__currency_exchange_Debug CMakeFiles/currency_exchange.dir/CSVReader.cpp.obj CMakeFiles/currency_exchange.dir/main.cpp.obj CMakeFiles/currency_exchange.dir/MerkelMain.cpp.obj CMakeFiles/currency_exchange.dir/OrderBook.cpp.obj CMakeFiles/currency_exchange.dir/OrderBookEntry.cpp.obj CMakeFiles/currency_exchange.dir/Wallet.cpp.obj CMakeFiles/currency_exchange.dir/candlestick.cpp.obj CMakeFiles/currency_exchange.dir/SearchObject.cpp.obj
+build currency_exchange.exe: CXX_EXECUTABLE_LINKER__currency_exchange_Debug CMakeFiles/currency_exchange.dir/CSVReader.cpp.obj CMakeFiles/currency_exchange.dir/main.cpp.obj CMakeFiles/currency_exchange.dir/MerkelMain.cpp.obj CMakeFiles/currency_exchange.dir/OrderBook.cpp.obj CMakeFiles/currency_exchange.dir/OrderBookEntry.cpp.obj CMakeFiles/currency_exchange.dir/Wallet.cpp.obj CMakeFiles/currency_exchange.dir/candlestick.cpp.obj CMakeFiles/currency_exchange.dir/SearchObject.cpp.obj CMakeFiles/currency_exchange.dir/SearchObjectTimeStamp.cpp.obj
   FLAGS = -g
   LINK_LIBRARIES = -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   OBJECT_DIR = CMakeFiles\currency_exchange.dir

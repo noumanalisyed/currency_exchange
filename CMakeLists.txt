@@ -17,4 +17,4 @@ add_executable(currency_exchange
         OrderBookEntry.h
         Wallet.cpp
         Wallet.h
-        candlestick.cpp SearchObject.h SearchObject.h SearchObject.cpp)
+        candlestick.cpp SearchObject.h SearchObject.h SearchObject.cpp SearchObjectTimeStamp.h SearchObjectTimeStamp.cpp)

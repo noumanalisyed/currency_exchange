@@ -1,20 +1,29 @@
 #include "OrderBookEntry.h"
 
+OrderBookEntry::OrderBookEntry(){
+    price = 0;
+    amount = 0;
+    timestamp = "";
+    product = "";
+    orderType = OrderBookType::ask;
+    username = "";
+}
 OrderBookEntry::OrderBookEntry(double _price,
                                double _amount,
                                std::string _timestamp,
                                std::string _product,
                                OrderBookType _orderType,
                                std::string _username)
-    : price(_price),
-      amount(_amount),
-      timestamp(_timestamp),
-      product(_product),
-      orderType(_orderType),
-      username(_username)
+        : price(_price),
+          amount(_amount),
+          timestamp(_timestamp),
+          product(_product),
+          orderType(_orderType),
+          username(_username)
 
 {
 }
+
 
 OrderBookType OrderBookEntry::stringToOrderBookType(std::string s)
 {
@@ -27,4 +36,12 @@ OrderBookType OrderBookEntry::stringToOrderBookType(std::string s)
     return OrderBookType::bid;
   }
   return OrderBookType::unknown;
+}
+
+OrderBookEntry::OrderBookEntry(const OrderBookEntry& entry) {
+    product = entry.product;
+    price = entry.price;
+    amount = entry.amount;
+    timestamp = entry.timestamp;
+    orderType = entry.orderType;
 }

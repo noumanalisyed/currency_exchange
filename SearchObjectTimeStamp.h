@@ -2,24 +2,22 @@
 // Created by nouman on 7/14/2023.
 //
 
-#ifndef CURRENCY_EXCHANGE_SEARCHOBJECT_H
-#define CURRENCY_EXCHANGE_SEARCHOBJECT_H
+#ifndef CURRENCY_EXCHANGE_SEARCHOBJECTTIMESTAMP_H
+#define CURRENCY_EXCHANGE_SEARCHOBJECTTIMESTAMP_H
 
 #include <string>
 #include <ostream>
 
-class SearchObject {
+class SearchObjectTimeStamp {
 public:
-    SearchObject();
-    SearchObject(const std::string &currentTimeStamp, const std::string &previousTimeStamp,
+    SearchObjectTimeStamp();
+    SearchObjectTimeStamp(const std::string &currentTimeStamp, const std::string &previousTimeStamp,
                  const int currentTimeStampIndex, const int previousTimeStampIndex);
 
-    SearchObject(int currentTimeStampIndex, int previousTimeStampIndex, const std::string &strCurrentTimeStamp,
-                 const std::string &strPreviousTimeStamp, const std::string &product, const std::string &type);
 
-    ~SearchObject();
+    ~SearchObjectTimeStamp();
 
-    int getCurrentTimeStampIndex();
+    int getCurrentTimeStampIndex()  const;
 
     void setCurrentTimeStampIndex(int currentTimeStampIndex);
 
@@ -43,14 +41,12 @@ public:
 
     void setType(const std::string &type);
 
-    friend std::ostream &operator<<(std::ostream &os, const SearchObject &object);
+    friend std::ostream &operator<<(std::ostream &os, const SearchObjectTimeStamp &object);
 
 private:
     int _currentTimeStampIndex;
     int _previousTimeStampIndex;
     std::string  _strCurrentTimeStamp;
     std::string  _strPreviousTimeStamp;
-    std::string _product;
-    std::string _type;
 };
-#endif //CURRENCY_EXCHANGE_SEARCHOBJECT_H
+#endif //CURRENCY_EXCHANGE_SEARCHOBJECTTIMESTAMP_H

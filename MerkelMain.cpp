@@ -6,18 +6,30 @@
 #include <set>
 #include <unordered_map>
 #include <algorithm>
+#define stringify( name ) #name;
 
 std::vector<std::pair<OrderBookEntry,std::string>> vectorUniqueProduct[5];
 
-bool MerkelMain::comp(const std::pair<std::string, int> &a,
-               const std::pair<std::string, int> &b)
+bool MerkelMain::comp(std::pair<std::string ,int> &a,
+                      std::pair<std::string ,int> &b)
 {
-    return (a.second < b.second);
+    return (a.first < b.first);
+}
+bool MerkelMain::comp_orderBookEntry(std::pair<int, OrderBookEntry> &a,
+                      std::pair<int, OrderBookEntry> &b)
+{
+    return (a.second.timestamp < b.second.timestamp);
 }
 
-void MerkelMain::sort_map(std::unordered_map<std::string, int> unorderedMap) {
-    sortedData = new std::vector<std::pair<std::string , int>>(unorderedMap.begin(), unorderedMap.end());
-    std::sort(sortedData->begin(), sortedData->end(), comp);
+void MerkelMain::sort_map(std::unordered_map<std::string , int> unorderedMap) {
+
+    sortedDataTimeStamps = new std::vector<std::pair<std::string ,int>>(unorderedMap.begin(), unorderedMap.end());
+    std::sort(sortedDataTimeStamps->begin(), sortedDataTimeStamps->end(), comp);
+}
+void MerkelMain::sort_map_orderBookEntry(std::unordered_map<int, OrderBookEntry> unorderedMap) {
+
+    sortedDataOderBookEntry = new std::vector<std::pair<int, OrderBookEntry>>(unorderedMap.begin(), unorderedMap.end());
+    std::sort(sortedDataOderBookEntry->begin(), sortedDataOderBookEntry->end(), comp_orderBookEntry);
 }
 
 void MerkelMain::initCandleStick(){
@@ -30,129 +42,139 @@ MerkelMain::MerkelMain()
 {
     std::cout<<"MerkelMain -- Default Constructor "<<std::endl;
 
-    orderBook = new OrderBook("E:\\c-workspace\\currency_exchange\\20200601.csv");
+    orderBook = new OrderBook("E:\\c-workspace\\currency_exchange\\ETH_BTC_ASK_TEST.csv");
     entries = orderBook->getAllOrders();
     splitTimeStampByUniqueValues();
     splitProductsByUniqueValues();
     sizeProducts = uniqueProductValues.size();
     sizeTimeStamps = uniqueTimeStampValues.size();
 
-    /*for (int j = 0; j < uniqueProductValues.size() ; ++j) {
-        for (auto const &element: entries) {
-            vectorUniqueProduct[j].push_back (std::make_pair(getProductWiseFilter(element.product), vectorProducts[j]));
-        }
-    }*/
+
     std::cout<<"Unique Time Stamps : "<<sizeTimeStamps<<std::endl;
-    searchObject = new SearchObject* [sizeTimeStamps];
+    //searchObject = new SearchObject* [sizeTimeStamps];
+    //searchObjectTimeStamp = new SearchObjectTimeStamp * [sizeTimeStamps];
+
     candlestick = new Candlestick * [sizeTimeStamps];
     initCandleStick();
     std::cout<<"Unique Products  : "<<sizeProducts<<std::endl;
     std::string sample;
     sort_map(uniqueTimeStampValues);
+    sort_map_orderBookEntry(uniqueOrderBookEntry);
+
     int objectIndex =0;
     int count =1;
-    for (const auto& i : *(sortedData)) {
-        std::cout <<count++<<".  "<< i.first << "    " << i.second << std::endl;
-        int index = getCurrentTimeStampIndex(i.first);
-        int indexPrevious = getPreviousTimeStampIndex(i.first);
-        std::string strCurrentTimeStamp = getCurrentTimeStamp(i.first);
-        std::string strPreviousTimeStamp = getPreviousTimeStamp(i.first);
-        searchObject[objectIndex++] = new SearchObject(strCurrentTimeStamp,strPreviousTimeStamp,index,indexPrevious);
+    std::string type;
+    int index;
+    int indexPrevious;
+    std::string strCurrentTimeStamp;
+    std::string strPreviousTimeStamp;
+    for (const auto& i : *(sortedDataTimeStamps)) {
+
+        std::cout <<count++<<".  "<< i.first << "    " << i.second<<"    "<<std::endl;
+        index = getCurrentTimeStampIndex(i.first);
+        indexPrevious = getPreviousTimeStampIndex(i.first);
+        strCurrentTimeStamp = getCurrentTimeStamp(i.first);
+        strPreviousTimeStamp = getPreviousTimeStamp(i.first);
+        SearchObjectTimeStamp *sTimeStamp = new SearchObjectTimeStamp(strCurrentTimeStamp,strPreviousTimeStamp,
+                                                                       index,indexPrevious);
+        searchObjectTimeStamp.push_back(*sTimeStamp);
+
         std::cout<<"Time Stamp  "<< i.first<<", index : "<<index<<", Previous Index : "<<indexPrevious
+                 <<", Current Time Stamp : "<<strCurrentTimeStamp<<",  Previous Time Stamp : "<<strPreviousTimeStamp<<std::endl;
+        objectIndex++;
+    }
+
+
+    objectIndex =0;
+    count =1;
+    index = 0;
+    indexPrevious = 0;
+    strCurrentTimeStamp = "";
+    strPreviousTimeStamp = "";
+    for (const auto& i : *(sortedDataOderBookEntry)) {
+        if(i.second.orderType == OrderBookType::ask){
+            type = "ask";
+        }
+        else{
+            type = "bid";
+        }
+
+        std::cout <<count++<<".  "<< i.second.timestamp << "    " << i.second.product<<"    "<< type<< std::endl;
+        index = getCurrentTimeStampIndex(i.second.timestamp);
+        indexPrevious = getPreviousTimeStampIndex(i.second.timestamp);
+        strCurrentTimeStamp = getCurrentTimeStamp(i.second.timestamp);
+        strPreviousTimeStamp = getPreviousTimeStamp(i.second.timestamp);
+        SearchObject *searchTimeStamp = new SearchObject(index,indexPrevious,
+                                                       strCurrentTimeStamp,strPreviousTimeStamp,i.second.product,type);
+        searchObject.push_back(*searchTimeStamp);
+        std::cout<<"Time Stamp  "<< i.second.timestamp<<", index : "<<index<<", Previous Index : "<<indexPrevious
         <<", Current Time Stamp : "<<strCurrentTimeStamp<<",  Previous Time Stamp : "<<strPreviousTimeStamp<<std::endl;
+        objectIndex++;
     }
 
     createCandelStick();
-
+    Candlestick candlestick2;
     for (int j = 0; j < sizeTimeStamps; j++) {
-        std::cout<<*(candlestick[j]);
+        //std::cout<<*(candlestick[j]);
+        candlestick2 = candleStickAsk[j];
+        std::cout<<candlestick2;
+        //candlestick2 = candleStickBid[j];
+       // std::cout<<candlestick2;
     }
 
-}
-int MerkelMain::getCurrentTimeStampIndex(std::string timeStamp){
-    int count =1;
-    int index = 0;
-    for (const auto& i : *(sortedData)) {
-        index = i.second;
-        if(timeStamp == i.first)
-            break;
-        count++;
-    }
-    return index;
-}
-
-int MerkelMain::getPreviousTimeStampIndex(std::string timeStamp){
-    int count =1;
-    int index = 0;
-    int prevIndex = -1;
-    for (const auto& i : *(sortedData)) {
-        prevIndex = index;
-        index = i.second;
-        if(timeStamp == i.first)
-            break;
-        count++;
-    }
-    return prevIndex;
-}
-std::string MerkelMain::getCurrentTimeStamp(std::string timeStamp){
-    int count =1;
-    int index = 0;
-    std::string strCurrentTimeStamp;
-    for (const auto& i : *(sortedData)) {
-        index = i.second;
-        strCurrentTimeStamp = i.first;
-        if(timeStamp == i.first)
-            break;
-        count++;
-    }
-    return strCurrentTimeStamp;
-}
-
-std::string MerkelMain::getPreviousTimeStamp(std::string timeStamp){
-    int count =1;
-    int index = 0;
-    int prevIndex = -1;
-    std::string strPreviousTimeStamp;
-    std::string strCurrentTimeStamp;
-    for (const auto& i : *(sortedData)) {
-        prevIndex = index;
-        index = i.second;
-        strPreviousTimeStamp = strCurrentTimeStamp;
-        strCurrentTimeStamp = i.first;
-        if(timeStamp == i.first)
-            break;
-        count++;
-    }
-    return strPreviousTimeStamp;
 }
 
 void MerkelMain::createCandelStick(){
 
     std::string product;
     int z = 0;
-    for (auto const& element : uniqueProductValues)
-    {
+    for (auto const& element : uniqueProductValues){
         vectorProducts.push_back(element.first);  // Write to file or whatever you want to do
     }
     int i = 0;
     while (i < sizeProducts) {
         product = vectorProducts[i];
+        double open = 0, close = 0, low = 0, high =0;
         int j = 0;
-        while (j < sortedData->size()) {
-            double open = getAverageFromFilterProductAsk(searchObject[j]->getStrPreviousTimeStamp(),
-                                                         product, OrderBookType::ask);
-            double close = getAverageFromFilterProductAsk(searchObject[j]->getStrCurrentTimeStamp(),
-                                                          product, OrderBookType::ask);
-            double low = getLowFromFilterProductsAsk(entries,product,
-                                                     searchObject[j]->getStrCurrentTimeStamp(),OrderBookType::ask);
-            double high = getHighFromFilterProductsAsk(entries,product,
-                                                      searchObject[j]->getStrCurrentTimeStamp(),OrderBookType::ask);
-            candlestick[j]->setClose(close);
+        while (j < sortedDataTimeStamps->size()) {
+            int searchIndex = searchObjectTimeStamp[j].getCurrentTimeStampIndex();
+
+            std::cout<<"Search Index "<<searchIndex<<std::endl;
+
+            if(searchObject[searchIndex].getType().compare("ask") == 0) {
+                open = getAverageFromFilterProductAsk(searchObjectTimeStamp[j].getStrPreviousTimeStamp(),
+                                                             product, OrderBookType::ask);
+                close = getAverageFromFilterProductAsk(searchObjectTimeStamp[j].getStrCurrentTimeStamp(),
+                                                              product, OrderBookType::ask);
+                low = getLowFromFilterProductsAsk(entries, product,searchObjectTimeStamp[j].getStrCurrentTimeStamp(),
+                                                         OrderBookType::ask);
+                high = getHighFromFilterProductsAsk(entries, product,searchObjectTimeStamp[j].getStrCurrentTimeStamp(),
+                                                           OrderBookType::ask);
+
+                Candlestick candlestick1(open, high, low, close, OrderBookType::ask, product);
+                candlestick[j]->setType(OrderBookType::ask);
+                candleStickAsk.push_back(candlestick1);
+            }
+
+            else  if(searchObject[searchIndex].getType().compare("bid") == 0) {
+                open = getAverageFromFilterProductAsk(searchObjectTimeStamp[j].getStrPreviousTimeStamp(),
+                                                             product, OrderBookType::bid);
+                close = getAverageFromFilterProductAsk(searchObjectTimeStamp[j].getStrCurrentTimeStamp(),
+                                                              product, OrderBookType::bid);
+                low = getLowFromFilterProductsAsk(entries, product,searchObjectTimeStamp[j].getStrCurrentTimeStamp(),
+                                                         OrderBookType::bid);
+                high = getHighFromFilterProductsAsk(entries, product,searchObjectTimeStamp[j].getStrCurrentTimeStamp(),
+                                                           OrderBookType::bid);
+                Candlestick candlestick1(open, high, low, close, OrderBookType::bid, product);
+                candlestick[j]->setType(OrderBookType::bid);
+                candleStickBid.push_back(candlestick1);
+            }
+
+          /*  candlestick[j]->setClose(close);
             candlestick[j]->setHigh(high);
             candlestick[j]->setLow(low);
             candlestick[j]->setOpen(open);
-            candlestick[j]->setProduct(product);
-            candlestick[j]->setType(OrderBookType::ask);
+            candlestick[j]->setProduct(product);*/
             j++;
         }
         i++;
@@ -196,6 +218,46 @@ void MerkelMain::printMenu(){
 
   std::cout << "Current time is " << currentTime << std::endl;
 }
+/*
+
+void MerkelMain::drawCandlestickChart(const std::vector<Candlestick>& data) {
+    const int chartWidth = 200;
+    const int chartHeight = 200;
+
+    // Find the highest and lowest values in the data
+    double minValue = data[0].low;
+    double maxValue = data[0].high;
+    for (const auto& candle : data) {
+        if (candle.low < minValue) {
+            minValue = candle.low;
+        }
+        if (candle.high > maxValue) {
+            maxValue = candle.high;
+        }
+    }
+
+    // Calculate the scaling factors
+    double valueRange = maxValue - minValue;
+    double verticalScale = chartHeight / valueRange;
+    double horizontalScale = chartWidth / static_cast<double>(data.size());
+
+    // Draw the chart
+    for (int y = chartHeight - 1; y >= 0; --y) {
+        for (std::size_t x = 0; x < data.size(); ++x) {
+            double currentValue = data[x].close;
+
+            // Check if the current pixel is within the candlestick range
+            if (currentValue >= minValue + (y / verticalScale) && currentValue <= minValue + ((y + 1) / verticalScale)) {
+                std::cout << "█"; // ASCII block character
+            } else {
+                std::cout << " ";
+            }
+        }
+        std::cout << std::endl;
+    }
+}
+*/
+
 
 int MerkelMain::getUserOption()
 {
@@ -533,7 +595,11 @@ void MerkelMain::splitTimeStampByUniqueValues() {
     //std::unordered_set<std::string> uniqueValues;
     for (OrderBookEntry &p : entries){
         std::string tokens = p.timestamp;
-        uniqueTimeStampValues.insert(std::pair<std::string,int>(tokens,i++));
+        uniqueTimeStampValues.insert(std::make_pair(tokens,i++));
+    }
+    i = 1;
+    for (OrderBookEntry &p : entries){
+        uniqueOrderBookEntry.insert(std::make_pair(i++,p));
     }
     std::cout<<"Exiting Time Stamp Unique Values "<<std::endl;
 }
@@ -548,4 +614,61 @@ void MerkelMain::splitProductsByUniqueValues() {
         uniqueProductValues.insert(std::pair<std::string,int>(tokens,i++));
     }
     std::cout<<"Exiting Products Unique Values "<<std::endl;
+}
+
+int MerkelMain::getCurrentTimeStampIndex(std::string timeStamp){
+    int count =1;
+    int index = 0;
+    for (const auto& i : *(sortedDataTimeStamps)) {
+        index = i.second;
+        if(timeStamp == i.first)
+            break;
+        count++;
+    }
+    return index;
+}
+
+int MerkelMain::getPreviousTimeStampIndex(std::string timeStamp){
+    int count =1;
+    int index = 0;
+    int prevIndex = -1;
+    for (const auto& i : *(sortedDataTimeStamps)) {
+        prevIndex = index;
+        index = i.second;
+        if(timeStamp == i.first)
+            break;
+        count++;
+    }
+    return prevIndex;
+}
+std::string MerkelMain::getCurrentTimeStamp(std::string timeStamp){
+    int count =1;
+    int index = 0;
+    std::string strCurrentTimeStamp;
+    for (const auto& i : *(sortedDataTimeStamps)) {
+        index = i.second;
+        strCurrentTimeStamp = i.first;
+        if(timeStamp == strCurrentTimeStamp)
+            break;
+        count++;
+    }
+    return strCurrentTimeStamp;
+}
+
+std::string MerkelMain::getPreviousTimeStamp(std::string timeStamp){
+    int count =1;
+    int index = 0;
+    int prevIndex = -1;
+    std::string strPreviousTimeStamp;
+    std::string strCurrentTimeStamp;
+    for (const auto& i : *(sortedDataTimeStamps)) {
+        prevIndex = index;
+        index = i.second;
+        strPreviousTimeStamp = strCurrentTimeStamp;
+        strCurrentTimeStamp = i.first;
+        if(timeStamp == strCurrentTimeStamp)
+            break;
+        count++;
+    }
+    return strPreviousTimeStamp;
 }

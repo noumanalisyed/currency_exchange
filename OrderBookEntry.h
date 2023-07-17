@@ -9,15 +9,21 @@ enum class OrderBookType
   asksale, bidsale
 };
 
-class OrderBookEntry
-{
+class OrderBookEntry{
 public:
-  OrderBookEntry(double _price,
-                 double _amount,
-                 std::string _timestamp,
-                 std::string _product,
-                 OrderBookType _orderType,
-                 std::string username = "dataset");
+
+    OrderBookEntry();
+
+    OrderBookEntry(double _price,
+                   double _amount,
+                   std::string _timestamp,
+                   std::string _product,
+                   OrderBookType _orderType,
+                   std::string username = "dataset");
+
+
+  OrderBookEntry(const OrderBookEntry& entry);
+
   static OrderBookType stringToOrderBookType(std::string s);
 
   static bool compareByTimestamp(OrderBookEntry &e1, OrderBookEntry &e2)
@@ -33,8 +39,8 @@ public:
     return e1.price < e2.price;
   }
 
-  double price;
-  double amount;
+  double price{};
+  double amount{};
   std::string timestamp;
   std::string product;
   OrderBookType orderType;
