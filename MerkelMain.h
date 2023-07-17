@@ -49,6 +49,7 @@ private:
 
   std::vector<Candlestick> candleStickAsk;
   std::vector< Candlestick> candleStickBid;
+  std::string ** graph;
 
   Wallet wallet;
   std::vector<SearchObject> searchObject;

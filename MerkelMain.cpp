@@ -42,7 +42,7 @@ MerkelMain::MerkelMain()
 {
     std::cout<<"MerkelMain -- Default Constructor "<<std::endl;
 
-    orderBook = new OrderBook("E:\\c-workspace\\currency_exchange\\ETH_BTC_ASK_TEST.csv");
+    orderBook = new OrderBook("E:\\c-workspace\\currency_exchange\\ETH_BTC.csv");
     entries = orderBook->getAllOrders();
     splitTimeStampByUniqueValues();
     splitProductsByUniqueValues();
@@ -211,52 +211,93 @@ void MerkelMain::printMenu(){
   // 6 continue
   std::cout << "6: continue " << std::endl;
 
-  std::cout << "7: Product Filter " << std::endl;
+  std::cout << "7: Draw Candle Chart ETH/BTC " << std::endl;
 
   std::cout << "============== " << std::endl;
   std::cout << "Type in 1-7" << std::endl;
 
   std::cout << "Current time is " << currentTime << std::endl;
 }
-/*
+
 
 void MerkelMain::drawCandlestickChart(const std::vector<Candlestick>& data) {
-    const int chartWidth = 200;
-    const int chartHeight = 200;
+
+    const int chartWidth = 12;
+    const int chartHeight = 11;
+    graph = new std::string *[chartWidth];
+    for (int i = 0; i < chartWidth; ++i) {
+        graph[i] = new std::string [chartHeight];
+    }
+
+    graph[0][0] =   {"Time Frame"};
+    graph[0][1] =   {"11:58:05"};
+    graph[0][2] =   {"11:58:10"};
+    graph[0][3] =   {"11:58:05"};
+    graph[0][4] =   {"11:58:00"};
+    graph[0][5] =   {"11:57:55"};
+    graph[0][6] =   {"11:57:50"};
+    graph[0][7] =   {"11:57:45"};
+    graph[0][8] =   {"11:57:40"};
+    graph[0][9] =   {"11:57:35"};
+    graph[0][10] =  {"11:57:30"};
+
+
+    graph[1][0] =   {"0.02526501"};
+    graph[2][0] =   {"0.02526211"};
+    graph[3][0] =   {"0.02494611"};
+    graph[4][0] =   {"0.02483911"};
+    graph[5][0] =   {"0.02483711"};
+    graph[6][0] =   {"0.02483451"};
+    graph[7][0] =   {"0.02483202"};
+    graph[8][0] =   {"0.02483011"};
+    graph[9][0] =   {"0.02482812"};
+    graph[10][0] =   {"0.02482611"};
+    graph[11][0] =   {"Price"};
+
 
     // Find the highest and lowest values in the data
-    double minValue = data[0].low;
-    double maxValue = data[0].high;
-    for (const auto& candle : data) {
-        if (candle.low < minValue) {
-            minValue = candle.low;
-        }
-        if (candle.high > maxValue) {
-            maxValue = candle.high;
-        }
-    }
-
-    // Calculate the scaling factors
-    double valueRange = maxValue - minValue;
-    double verticalScale = chartHeight / valueRange;
-    double horizontalScale = chartWidth / static_cast<double>(data.size());
-
-    // Draw the chart
-    for (int y = chartHeight - 1; y >= 0; --y) {
-        for (std::size_t x = 0; x < data.size(); ++x) {
-            double currentValue = data[x].close;
-
-            // Check if the current pixel is within the candlestick range
-            if (currentValue >= minValue + (y / verticalScale) && currentValue <= minValue + ((y + 1) / verticalScale)) {
-                std::cout << "█"; // ASCII block character
-            } else {
-                std::cout << " ";
+        double minValue = data[0].getLow();
+        double maxValue = data[0].getHigh();
+        for (const auto &candle: data) {
+            if (candle.getLow() < minValue) {
+                minValue = candle.getLow();
+            }
+            if (candle.getHigh() > maxValue) {
+                maxValue = candle.getHigh();
             }
         }
-        std::cout << std::endl;
+
+        // Calculate the scaling factors
+        double valueRange = maxValue - minValue;
+        double verticalScale = chartHeight / valueRange;
+        double horizontalScale = chartWidth / static_cast<double>(candleStickAsk.size());
+
+        // Draw the chart
+        for (int y = chartHeight - 1; y >= 1; --y) {
+            for (std::size_t x = 1; x < candleStickAsk.size(); ++x) {
+                double currentValue = candleStickAsk[x].getClose();
+
+                // Check if the current pixel is within the candlestick range
+                if (currentValue >= minValue + (y / verticalScale) &&
+                    currentValue <= minValue + ((y + 1) / verticalScale)) {
+                    graph[x][y] = "||";
+                    //std::cout << "█"; // ASCII block character
+                } else {
+                    std::cout << " ";
+                }
+            }
+            std::cout << std::endl;
+        }
+
+    for (int i = 0; i < chartWidth; ++i) {
+        for (int j = 0; j < chartHeight; ++j) {
+            std::cout<<graph[i][j]<<"  ";
+        }
+        std::cout<<std::endl;
     }
+    std::cout<<std::endl<<std::endl;
 }
-*/
+
 
 
 int MerkelMain::getUserOption()
@@ -583,7 +624,8 @@ void MerkelMain::processUserOption(int userOption)
   }
   if (userOption == 7) // bad input
   {
-      getProductFilter("ETH/BTC","2020/06/01 11:57:30.328127","ASK");
+      drawCandlestickChart(candleStickAsk);
+      //getProductFilter("ETH/BTC","2020/06/01 11:57:30.328127","ASK");
   }
 }
 
